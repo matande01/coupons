@@ -2,21 +2,63 @@
 
 @theme {
   --font-sans: 'Rubik', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --animate-up: up 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
-  --animate-fade: fade 0.2s ease;
+  --font-display: 'Fredoka', 'Rubik', ui-rounded, system-ui, sans-serif;
+
+  /* Deep indigo / navy brand + warm amber + emerald accents */
+  --color-navy-950: #070c26;
+  --color-navy-900: #0f1740;
+  --color-navy-800: #18225a;
+  --color-navy-700: #253178;
+  --color-canvas: #f3f2f9;
+
+  --shadow-soft: 0 1px 2px rgb(15 23 64 / 0.05), 0 10px 28px -10px rgb(15 23 64 / 0.16);
+  --shadow-lift: 0 2px 4px rgb(15 23 64 / 0.06), 0 18px 40px -12px rgb(15 23 64 / 0.28);
+  --shadow-glow: 0 10px 30px -6px rgb(245 165 36 / 0.55);
+
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-up: up 0.42s var(--ease-ios);
+  --animate-fade: fade 0.25s ease;
+  --animate-pop: pop 0.5s var(--ease-spring);
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-rise: rise 0.5s var(--ease-ios) both;
 
   @keyframes up {
     from {
-      transform: translateY(24px);
-      opacity: 0;
+      transform: translateY(100%);
     }
     to {
       transform: none;
-      opacity: 1;
     }
   }
   @keyframes fade {
     from {
+      opacity: 0;
+    }
+  }
+  @keyframes pop {
+    0% {
+      transform: translateY(16px) scale(0.92);
+      opacity: 0;
+    }
+    100% {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  @keyframes rise {
+    from {
+      transform: translateY(14px);
       opacity: 0;
     }
   }
@@ -28,10 +70,93 @@ html {
 }
 
 body {
-  background: var(--color-slate-50);
-  color: var(--color-slate-900);
+  background: var(--color-canvas);
+  color: var(--color-navy-900);
   font-family: var(--font-sans);
   overscroll-behavior-y: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-amber-400);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ── Mascot animations ── */
+.cop-anim .cop-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cop-blink 4.5s infinite;
+}
+.cop-anim .cop-tail {
+  transform-box: view-box;
+  transform-origin: 126px 176px;
+  animation: cop-wag 2.8s ease-in-out infinite;
+}
+.cop-anim .cop-tool {
+  transform-box: view-box;
+  transform-origin: 153px 148px;
+  animation: cop-sway 1.8s ease-in-out infinite;
+}
+.cop-anim .cop-spot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cop-pulse 1.8s ease-in-out infinite;
+}
+.cop-anim .cop-thumb {
+  transform-box: view-box;
+  transform-origin: 140px 165px;
+  animation: cop-pump 0.7s var(--ease-spring) both;
+}
+.cop-anim .cop-sparkles {
+  animation: cop-twinkle 1.4s ease-in-out infinite;
+}
+@keyframes cop-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+@keyframes cop-wag {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(5deg); }
+}
+@keyframes cop-sway {
+  0%, 100% { transform: rotate(-10deg) translateX(-2px); }
+  50% { transform: rotate(10deg) translateX(2px); }
+}
+@keyframes cop-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+@keyframes cop-pump {
+  0% { transform: rotate(30deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes cop-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes scanline {
+  0% { top: -24px; }
+  100% { top: 100%; }
+}
+@keyframes indeterminate {
+  0% { transform: translateX(120%); }
+  100% { transform: translateX(-320%); }
+}
+
+/* Voucher tear-off notches: circles in the page colour cut into the card edge */
+.voucher-notch {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--color-canvas);
+  inset-inline-start: calc(var(--stub) - 10px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -39,6 +164,7 @@ body {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

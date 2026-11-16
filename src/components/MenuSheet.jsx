@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import Sheet from './Sheet'
 import { btn } from './ui'
+import Cop from '../mascot/Cop'
 import { exportBackup, importBackup } from '../lib/coupons'
 
 export default function MenuSheet({ onClose, notify }) {
@@ -11,11 +12,11 @@ export default function MenuSheet({ onClose, notify }) {
     setBusy(true)
     try {
       const blob = await exportBackup()
-      const name = `coupons-backup-${new Date().toISOString().slice(0, 10)}.json`
+      const name = `cop-backup-${new Date().toISOString().slice(0, 10)}.json`
       const file = new File([blob], name, { type: 'application/json' })
       // On iPhone the share sheet lets you save the file to Files / iCloud Drive.
       if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: 'גיבוי קופונים' }).catch(() => {})
+        await navigator.share({ files: [file], title: 'גיבוי Cop' }).catch(() => {})
       } else {
         const a = document.createElement('a')
         a.href = URL.createObjectURL(blob)
@@ -43,10 +44,13 @@ export default function MenuSheet({ onClose, notify }) {
 
   return (
     <Sheet title="גיבוי ושחזור" onClose={onClose}>
-      <div className="space-y-3">
-        <p className="text-sm text-slate-600">
-          הקופונים שמורים רק על המכשיר הזה. כדאי לשמור גיבוי מדי פעם (למשל ב-iCloud Drive) כדי לא לאבד אותם אם מוחקים את האפליקציה.
-        </p>
+      <div className="space-y-4">
+        <div className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-soft">
+          <Cop pose="idle" className="size-20 shrink-0" />
+          <p className="text-sm leading-relaxed text-slate-600">
+            הקופונים שמורים רק על המכשיר הזה. כדאי לשמור גיבוי מדי פעם (למשל ב-iCloud Drive) כדי שלא יאבדו אם מוחקים את האפליקציה.
+          </p>
+        </div>
         <button className={`${btn.primary} w-full`} onClick={doExport} disabled={busy}>
           שמירת גיבוי
         </button>
