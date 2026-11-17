@@ -16,3 +16,4 @@ export const ImageIcon = I(<><rect x="3" y="3" width="18" height="18" rx="2" /><
 export const ClockIcon = I(<><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></>)
 export const TicketIcon = I(<><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" /><path d="M13 5v2M13 17v2M13 11v2" /></>)
 export const SparkIcon = I(<path d="M12 3l1.9 5.8L20 10.7l-5 3.6L16.8 21 12 17.3 7.2 21 9 14.3l-5-3.6 6.1-1.9z" />)
+export const MailIcon = I(<><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-10 6L2 7" /></>)

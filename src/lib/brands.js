@@ -35,6 +35,8 @@ export const BRANDS = [
   { name: 'BUYME', aliases: ['buyme', 'buy me', 'ביימי'] },
   { name: 'תו הזהב', aliases: ['tav hazahav', 'תו הזהב'] },
   { name: 'נופשונית', aliases: ['nofshonit', 'נופשונית'] },
+  { name: 'תו פלוס', aliases: ['tav plus', 'תו פלוס'] },
+  { name: 'קצפת', aliases: ['katsefet', 'קצפת'] },
   { name: 'דרים קארד', aliases: ['dream card', 'dreamcard', 'דרים קארד'] },
   { name: 'סיבוס', aliases: ['cibus', 'pluxee', 'סיבוס', 'פלוקסי'] },
   { name: 'תן ביס', aliases: ['10bis', 'תן ביס'] },

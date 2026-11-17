@@ -15,16 +15,20 @@ const STAGE_TEXT = {
 
 const empty = { brand: '', code: '', pin: '', amount: '', balance: '', expiry: '', notes: '' }
 
-export default function CouponForm({ coupon, initialFile, knownBrands, onClose, onSaved }) {
+// prefill: fields found by Voucher Catcher ({brand, code, pin, amount, expiry}); shown with the "קופ זיהה" badge.
+export default function CouponForm({ coupon, initialFile, prefill, knownBrands, onClose, onSaved }) {
   const editing = Boolean(coupon)
+  const prefilled = Object.fromEntries(Object.entries(prefill || {}).filter(([, v]) => v).map(([k, v]) => [k, String(v)]))
   const [form, setForm] = useState(() =>
-    coupon ? { ...empty, ...coupon, amount: String(coupon.amount), balance: String(coupon.balance) } : empty,
+    coupon
+      ? { ...empty, ...coupon, amount: String(coupon.amount), balance: String(coupon.balance) }
+      : { ...empty, ...prefilled, balance: prefilled.amount ?? '', notes: prefill ? 'נתפס ממייל' : '' },
   )
   const [image, setImage] = useState(coupon?.image ?? null)
   const [balanceTouched, setBalanceTouched] = useState(editing)
   const [scan, setScan] = useState(null) // {stage, progress}
-  const [auto, setAuto] = useState(new Set()) // fields filled by recognition
-  const [scanNote, setScanNote] = useState('')
+  const [auto, setAuto] = useState(() => new Set(Object.keys(prefilled))) // fields filled by recognition
+  const [scanNote, setScanNote] = useState(prefill ? 'קופ תפס חלק מהפרטים מהמייל. השלימו את מה שחסר ושמרו.' : '')
   const [rawText, setRawText] = useState('')
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)

@@ -9,9 +9,10 @@ import CouponForm from './components/CouponForm'
 import SpendSheet from './components/SpendSheet'
 import DetailSheet from './components/DetailSheet'
 import MenuSheet from './components/MenuSheet'
+import CatchSheet from './components/CatchSheet'
 import Cop from './mascot/Cop'
 import { BrandAvatar, btn } from './components/ui'
-import { CameraIcon, MenuIcon, PencilIcon, PlusIcon, SearchIcon } from './components/icons'
+import { CameraIcon, MailIcon, MenuIcon, PencilIcon, PlusIcon, SearchIcon } from './components/icons'
 
 export default function App() {
   const coupons = useLiveQuery(() => db.coupons.toArray(), [])
@@ -161,7 +162,7 @@ export default function App() {
         {/* ── Content ── */}
         {tab === 'active' ? (
           groups.length === 0 ? (
-            <EmptyState hasAny={coupons.length > 0 || Boolean(query)} onScan={() => scanRef.current.click()} onManual={() => setModal({ type: 'form' })} />
+            <EmptyState hasAny={coupons.length > 0 || Boolean(query)} onScan={() => scanRef.current.click()} onManual={() => setModal({ type: 'form' })} onCatch={() => setModal({ type: 'catch' })} />
           ) : (
             <div className="mt-6 space-y-7">
               {groups.map((g) => (
@@ -208,6 +209,7 @@ export default function App() {
         {fabOpen && (
           <>
             <div className="fixed inset-0 -z-10 animate-fade bg-navy-950/20 backdrop-blur-[2px]" onClick={() => setFabOpen(false)} />
+            <FabAction delay={120} icon={<MailIcon width={18} height={18} />} label="תפיסת שובר ממייל" onClick={() => { setFabOpen(false); setModal({ type: 'catch' }) }} />
             <FabAction delay={60} icon={<CameraIcon width={18} height={18} />} label="סריקה מצילום מסך" onClick={() => { setFabOpen(false); scanRef.current.click() }} />
             <FabAction delay={0} icon={<PencilIcon width={18} height={18} />} label="הזנה ידנית" onClick={() => { setFabOpen(false); setModal({ type: 'form' }) }} />
           </>
@@ -241,6 +243,7 @@ export default function App() {
           key={modal.id ?? 'new'}
           coupon={modalCoupon}
           initialFile={modal.file}
+          prefill={modal.prefill}
           knownBrands={knownBrands}
           onClose={modal.back === 'detail' ? () => setModal({ type: 'detail', id: modal.id }) : close}
           onSaved={(id) => {
@@ -268,6 +271,19 @@ export default function App() {
         />
       )}
       {modal?.type === 'menu' && <MenuSheet onClose={close} notify={notify} />}
+      {modal?.type === 'catch' && (
+        <CatchSheet
+          onClose={close}
+          onReview={(prefill) => setModal({ type: 'form', prefill })}
+          onCaught={(id, duplicate) => {
+            setModal(null)
+            setTab('active')
+            const open = { label: 'פתיחה', fn: () => setModal({ type: 'detail', id }) }
+            if (duplicate) notify('השובר הזה כבר שמור אצל קופ', open)
+            else notify('נשמר כמו קופון רגיל · כדאי לוודא את הפרטים', open, { title: 'קופ תפס שובר!', cop: 'thumbs' })
+          }}
+        />
+      )}
 
       {/* ── Toast ── */}
       {toast && <Toast toast={toast} onDismiss={() => setToast(null)} />}
@@ -315,7 +331,7 @@ function FabAction({ icon, label, onClick, delay }) {
   )
 }
 
-function EmptyState({ hasAny, onScan, onManual }) {
+function EmptyState({ hasAny, onScan, onManual, onCatch }) {
   if (hasAny)
     return (
       <div className="mt-12 flex flex-col items-center text-center">
@@ -337,6 +353,9 @@ function EmptyState({ hasAny, onScan, onManual }) {
         </button>
         <button onClick={onManual} className="min-h-12 rounded-2xl bg-white font-semibold text-navy-800 shadow-soft ring-1 ring-navy-900/5 transition hover:bg-white/70 active:scale-[.97]">
           הזנה ידנית
+        </button>
+        <button onClick={onCatch} className="inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-semibold text-indigo-700">
+          <MailIcon width={16} height={16} /> קיבלתם גיפט קארד במייל?
         </button>
       </div>
     </div>
